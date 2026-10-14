@@ -1,5 +1,3 @@
-// components/article-card.tsx
-
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import { Article } from "../data/articles";
