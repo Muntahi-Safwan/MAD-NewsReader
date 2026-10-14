@@ -1,8 +1,10 @@
 import { useLocalSearchParams, useNavigation } from "expo-router";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
+
+import { Ionicons } from "@expo/vector-icons";
 
 import { ARTICLES } from "../../../data/articles";
 
@@ -33,13 +35,13 @@ export default function ArticleDetail() {
 
   const article = ARTICLES.find((a) => a.id === id);
 
-  // Update the Stack header title once we have the article
-
   useEffect(() => {
     if (article) {
       navigation.setOptions({ title: article.title });
     }
   }, [article]);
+
+  const [bookmarked, setBookmarked] = useState<boolean>(false);
 
   if (!article) {
     return (
@@ -76,6 +78,14 @@ export default function ArticleDetail() {
           </Text>
         ))}
       </ScrollView>
+
+      <Pressable style={styles.fab} onPress={() => setBookmarked((b) => !b)}>
+        <Ionicons
+          name={bookmarked ? "bookmark" : "bookmark-outline"}
+          size={22}
+          color="#FFFFFF"
+        />
+      </Pressable>
     </SafeAreaView>
   );
 }
@@ -116,6 +126,23 @@ const styles = StyleSheet.create({
   divider: { height: 1, backgroundColor: "#F1F5F9", marginBottom: 20 },
 
   body: { fontSize: 15, color: "#334155", lineHeight: 24, marginBottom: 16 },
+
+  fab: {
+    position: "absolute",
+    right: 20,
+    bottom: 24,
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: "#0D1F4E",
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 4,
+    shadowColor: "#000",
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+  },
 
   notFound: { padding: 40, textAlign: "center", color: "#94A3B8" },
 });

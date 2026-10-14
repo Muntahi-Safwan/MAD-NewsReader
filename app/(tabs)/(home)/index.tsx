@@ -1,7 +1,5 @@
 import { router } from "expo-router";
-
 import { useState } from "react";
-
 import {
   FlatList,
   Pressable,
@@ -10,13 +8,9 @@ import {
   Text,
   View,
 } from "react-native";
-
 import ArticleCard from "../../../components/article-card";
-
 import { Article, ARTICLES } from "../../../data/articles";
-
 import { SafeAreaView } from "react-native-safe-area-context";
-
 const CATEGORIES = [...new Set(ARTICLES.map((a) => a.category))];
 
 export default function ArticleList() {
@@ -29,7 +23,6 @@ export default function ArticleList() {
   const handlePress = (article: Article) => {
     router.push({
       pathname: "/(home)/[id]",
-
       params: { id: article.id },
     });
   };
@@ -87,15 +80,15 @@ const styles = StyleSheet.create({
   pill: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 999,
+    borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#0D9488",
+    borderColor: "#1D4ED8",
     backgroundColor: "transparent",
   },
 
-  pillActive: { backgroundColor: "#0D9488" },
+  pillActive: { backgroundColor: "#1D4ED8" },
 
-  pillText: { fontSize: 14, color: "#0D9488", fontWeight: "500" },
+  pillText: { fontSize: 14, color: "#1D4ED8", fontWeight: "500" },
 
   pillTextActive: { color: "#FFFFFF" },
 
