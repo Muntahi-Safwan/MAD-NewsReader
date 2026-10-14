@@ -1,6 +1,15 @@
 import { router } from "expo-router";
 
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 import ArticleCard from "../../../components/article-card";
 
@@ -8,7 +17,15 @@ import { Article, ARTICLES } from "../../../data/articles";
 
 import { SafeAreaView } from "react-native-safe-area-context";
 
+const CATEGORIES = [...new Set(ARTICLES.map((a) => a.category))];
+
 export default function ArticleList() {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const filtered = selectedCategory
+    ? ARTICLES.filter((a) => a.category === selectedCategory)
+    : ARTICLES;
+
   const handlePress = (article: Article) => {
     router.push({
       pathname: "/(home)/[id]",
@@ -20,7 +37,7 @@ export default function ArticleList() {
   return (
     <SafeAreaView style={styles.screen}>
       <FlatList
-        data={ARTICLES}
+        data={filtered}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <ArticleCard article={item} onPress={handlePress} />
@@ -28,7 +45,29 @@ export default function ArticleList() {
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <View style={styles.listHeader}>
-            <Text style={styles.listHeaderText}>{ARTICLES.length} stories</Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.pills}
+            >
+              {[null, ...CATEGORIES].map((category) => {
+                const active = category === selectedCategory;
+                return (
+                  <Pressable
+                    key={category ?? "all"}
+                    onPress={() => setSelectedCategory(category)}
+                    style={[styles.pill, active && styles.pillActive]}
+                  >
+                    <Text
+                      style={[styles.pillText, active && styles.pillTextActive]}
+                    >
+                      {category ?? "All"}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </ScrollView>
+            <Text style={styles.listHeaderText}>{filtered.length} stories</Text>
           </View>
         }
       />
@@ -42,6 +81,23 @@ const styles = StyleSheet.create({
   list: { paddingTop: 12, paddingBottom: 32 },
 
   listHeader: { paddingHorizontal: 16, paddingBottom: 8 },
+
+  pills: { gap: 8, paddingBottom: 12 },
+
+  pill: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "#0D9488",
+    backgroundColor: "transparent",
+  },
+
+  pillActive: { backgroundColor: "#0D9488" },
+
+  pillText: { fontSize: 14, color: "#0D9488", fontWeight: "500" },
+
+  pillTextActive: { color: "#FFFFFF" },
 
   listHeaderText: {
     fontSize: 12,
